@@ -1,12 +1,13 @@
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.compose)
+    alias(libs.plugins.ksp)
 }
 
 android {
     namespace = "com.example.appgym"
     compileSdk {
-        version = release(37)
+        version = release (37)
     }
 
     defaultConfig {
@@ -22,7 +23,8 @@ android {
     buildTypes {
         release {
             optimization {
-                enable = false
+                enable = true
+                packageScope = setOf("androidx.**", "kotlin.**", "kotlinx.**")
             }
         }
     }
@@ -51,4 +53,12 @@ dependencies {
     androidTestImplementation(libs.androidx.junit)
     debugImplementation(libs.androidx.compose.ui.test.manifest)
     debugImplementation(libs.androidx.compose.ui.tooling)
+
+    implementation("androidx.navigation:navigation-compose:2.8.9")
+
+    val roomVersion = "2.8.5"
+    implementation("androidx.compose.material:material-icons-extended")
+    implementation("androidx.room:room-runtime:$roomVersion")
+    implementation("androidx.room:room-ktx:$roomVersion")
+    ksp("androidx.room:room-compiler:$roomVersion")
 }

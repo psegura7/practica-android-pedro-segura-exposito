@@ -3,45 +3,61 @@ package com.example.appgym
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.activity.enableEdgeToEdge
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
-import com.example.appgym.ui.theme.AppGymTheme
+import androidx.compose.runtime.remember
+import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.compose.rememberNavController
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import com.example.appgym.data.database.DatabaseProvider
+import com.example.appgym.data.repository.UsuarioRepository
+import com.example.appgym.ui.scene.LoginScreen
+import com.example.appgym.ui.scene.RegistroScreen
+import com.example.appgym.ui.scene.UsuariosScreen
+import com.example.appgym.viewmodel.UsuarioViewModel
+import com.example.appgym.ui.scene.PrincipalScreen
 
 class MainActivity : ComponentActivity() {
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
+
+        val database = DatabaseProvider.getDatabase(this)
+        val repository = UsuarioRepository(database.usuarioDao())
+        val usuarioViewModel = UsuarioViewModel(repository)
+
         setContent {
-            AppGymTheme {
-                Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    Greeting(
-                        name = "Android",
-                        modifier = Modifier.padding(innerPadding)
+
+            val navController = rememberNavController()
+
+            NavHost(
+                navController = navController,
+                startDestination = "login"
+            ) {
+
+                composable("login") {
+
+                    LoginScreen(
+                        navController = navController,
+                        usuarioViewModel = usuarioViewModel
                     )
+
                 }
+
+                composable("registro") {
+
+                    RegistroScreen(
+                        navController = navController,
+                        usuarioViewModel = usuarioViewModel
+                    )
+
+                }
+
+                composable("principal") {
+                    PrincipalScreen(navController)
+                }
+
             }
+
         }
-    }
-}
-
-@Composable
-fun Greeting(name: String, modifier: Modifier = Modifier) {
-    Text(
-        text = "Hello $name!",
-        modifier = modifier
-    )
-}
-
-@Preview(showBackground = true)
-@Composable
-fun GreetingPreview() {
-    AppGymTheme {
-        Greeting("Android")
     }
 }
