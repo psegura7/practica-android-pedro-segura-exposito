@@ -2,6 +2,7 @@ package com.example.appgym.data.dao
 
 import androidx.room.*
 import com.example.appgym.data.entities.Usuario
+import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface UsuarioDao {
@@ -16,7 +17,7 @@ interface UsuarioDao {
     suspend fun eliminar(usuario: Usuario)
 
     @Query("SELECT * FROM usuarios")
-    suspend fun obtenerTodos(): List<Usuario>
+    fun obtenerTodos(): Flow<List<Usuario>>
 
     @Query("SELECT * FROM usuarios WHERE id = :id")
     suspend fun obtenerPorId(id: Int): Usuario?

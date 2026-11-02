@@ -1,4 +1,4 @@
-package com.example.appgym.ui.scene
+package com.example.appgym.ui.screens
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn

@@ -3,18 +3,17 @@ package com.example.appgym
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.runtime.remember
-import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.Scaffold
+import androidx.compose.runtime.getValue
+import androidx.compose.ui.Modifier
+import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import androidx.navigation.compose.NavHost
-import androidx.navigation.compose.composable
 import com.example.appgym.data.database.DatabaseProvider
 import com.example.appgym.data.repository.UsuarioRepository
-import com.example.appgym.ui.scene.LoginScreen
-import com.example.appgym.ui.scene.RegistroScreen
-import com.example.appgym.ui.scene.UsuariosScreen
+import com.example.appgym.ui.components.BottomBar
+import com.example.appgym.ui.components.AppNavigation
 import com.example.appgym.viewmodel.UsuarioViewModel
-import com.example.appgym.ui.scene.PrincipalScreen
 
 class MainActivity : ComponentActivity() {
 
@@ -26,38 +25,28 @@ class MainActivity : ComponentActivity() {
         val usuarioViewModel = UsuarioViewModel(repository)
 
         setContent {
-
             val navController = rememberNavController()
 
-            NavHost(
-                navController = navController,
-                startDestination = "login"
-            ) {
+            // Obtenemos la ruta actual para la BottomBar
+            val navBackStackEntry by navController.currentBackStackEntryAsState()
+            val currentRoute = navBackStackEntry?.destination?.route
 
-                composable("login") {
+            val pantallasConBarra = listOf("principal", "rutinas", "perfil")
 
-                    LoginScreen(
-                        navController = navController,
-                        usuarioViewModel = usuarioViewModel
-                    )
-
+            Scaffold(
+                bottomBar = {
+                    if (currentRoute in pantallasConBarra) {
+                        BottomBar(navController = navController)
+                    }
                 }
-
-                composable("registro") {
-
-                    RegistroScreen(
-                        navController = navController,
-                        usuarioViewModel = usuarioViewModel
-                    )
-
-                }
-
-                composable("principal") {
-                    PrincipalScreen(navController)
-                }
-
+            ) { innerPadding ->
+                // Llamamos a nuestro componente de navegación centralizado
+                AppNavigation(
+                    navController = navController,
+                    usuarioViewModel = usuarioViewModel,
+                    modifier = Modifier.padding(innerPadding)
+                )
             }
-
         }
     }
 }

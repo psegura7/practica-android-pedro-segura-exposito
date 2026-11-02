@@ -1,4 +1,4 @@
-package com.example.appgym.ui.scene
+package com.example.appgym.ui.screens
 
 import android.widget.Toast
 import androidx.compose.foundation.layout.*

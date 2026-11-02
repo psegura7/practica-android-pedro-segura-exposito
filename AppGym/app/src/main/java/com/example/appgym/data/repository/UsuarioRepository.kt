@@ -2,6 +2,7 @@ package com.example.appgym.data.repository
 
 import com.example.appgym.data.dao.UsuarioDao
 import com.example.appgym.data.entities.Usuario
+import kotlinx.coroutines.flow.Flow
 
 class UsuarioRepository(
     private val usuarioDao: UsuarioDao
@@ -11,7 +12,7 @@ class UsuarioRepository(
         usuarioDao.insertar(usuario)
     }
 
-    suspend fun obtenerTodos(): List<Usuario> {
+    fun obtenerTodosLosUsuarios(): Flow<List<Usuario>> {
         return usuarioDao.obtenerTodos()
     }
 
@@ -28,5 +29,13 @@ class UsuarioRepository(
 
     suspend fun obtenerPorEmail(email: String): Usuario? {
         return usuarioDao.obtenerPorEmail(email)
+    }
+
+    suspend fun actualizar(usuario: Usuario) {
+        usuarioDao.actualizar(usuario)
+    }
+
+    suspend fun obtenerPorId(id: Int): Usuario? {
+        return usuarioDao.obtenerPorId(id)
     }
 }
