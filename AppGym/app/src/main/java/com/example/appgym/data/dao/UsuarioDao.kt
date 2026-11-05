@@ -7,8 +7,8 @@ import kotlinx.coroutines.flow.Flow
 @Dao
 interface UsuarioDao {
 
-    @Insert
-    suspend fun insertar(usuario: Usuario)
+    @Insert(onConflict = OnConflictStrategy.REPLACE) // <-- Añade esto para evitar crasheos por duplicados
+    suspend fun insertar(usuario: Usuario): Long // <-- Cambiado para devolver el ID generado (Long)
 
     @Update
     suspend fun actualizar(usuario: Usuario)

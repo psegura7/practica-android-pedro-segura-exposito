@@ -20,7 +20,6 @@ fun RegistroScreen(
     navController: NavController,
     usuarioViewModel: UsuarioViewModel
 ) {
-
     var nombre by remember { mutableStateOf("") }
     var email by remember { mutableStateOf("") }
     var contraseña by remember { mutableStateOf("") }
@@ -33,12 +32,9 @@ fun RegistroScreen(
         modifier = Modifier
             .fillMaxSize()
             .padding(20.dp),
-
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
-
     ) {
-
         Text(
             "Crear cuenta",
             style = MaterialTheme.typography.headlineMedium
@@ -84,62 +80,59 @@ fun RegistroScreen(
         Spacer(modifier = Modifier.height(20.dp))
 
         Button(
-
             modifier = Modifier.fillMaxWidth(),
-
             onClick = {
-
-                if (
-                    nombre.isBlank() ||
-                    email.isBlank() ||
-                    contraseña.isBlank() ||
-                    edad.isBlank()
-                ) {
-
+                if (nombre.isBlank() || email.isBlank() || contraseña.isBlank() || edad.isBlank()) {
                     Toast.makeText(
                         context,
                         "Completa todos los campos",
                         Toast.LENGTH_SHORT
                     ).show()
+                    return@Button
+                }
 
+                // Conversión segura de edad para evitar NumberFormatException
+                val edadInt = edad.toIntOrNull()
+                if (edadInt == null) {
+                    Toast.makeText(
+                        context,
+                        "Introduce una edad válida (número)",
+                        Toast.LENGTH_SHORT
+                    ).show()
                     return@Button
                 }
 
                 scope.launch {
-
-                    usuarioViewModel.registrarUsuario(
-
-                        Usuario(
-
-                            nombreUsuario = nombre,
-                            email = email,
-                            contraseña = contraseña,
-                            fotoPerfil = null,
-                            fechaRegistro = LocalDate.now().toString(),
-                            edad = edad.toInt()
-
+                    try {
+                        usuarioViewModel.registrarUsuario(
+                            Usuario(
+                                nombreUsuario = nombre,
+                                email = email,
+                                contraseña = contraseña,
+                                fotoPerfil = null,
+                                fechaRegistro = LocalDate.now().toString(),
+                                edad = edadInt
+                            )
                         )
 
-                    )
+                        Toast.makeText(
+                            context,
+                            "Usuario registrado correctamente",
+                            Toast.LENGTH_SHORT
+                        ).show()
 
-                    Toast.makeText(
-                        context,
-                        "Usuario registrado correctamente",
-                        Toast.LENGTH_SHORT
-                    ).show()
-
-                    navController.popBackStack()
-
+                        navController.popBackStack()
+                    } catch (e: Exception) {
+                        Toast.makeText(
+                            context,
+                            "Error al registrar: ${e.localizedMessage}",
+                            Toast.LENGTH_LONG
+                        ).show()
+                    }
                 }
-
             }
-
         ) {
-
             Text("Registrarse")
-
         }
-
     }
-
 }

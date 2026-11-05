@@ -3,6 +3,7 @@ package com.example.appgym.ui.screens
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -61,6 +62,15 @@ fun PerfilScreen(
         topBar = {
             TopAppBar(
                 title = { Text(if (esMiPerfil) "Mi Perfil" else "Perfil de Usuario") },
+                // Flecha para volver hacia atrás
+                navigationIcon = {
+                    IconButton(onClick = { navController.popBackStack() }) {
+                        Icon(
+                            imageVector = Icons.Default.ArrowBack,
+                            contentDescription = "Volver atrás"
+                        )
+                    }
+                },
                 actions = {
                     // Si es tu propio perfil, mostramos un botón de editar en la barra superior
                     if (esMiPerfil) {

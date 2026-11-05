@@ -7,10 +7,9 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import com.example.appgym.data.database.DatabaseProvider
-import com.example.appgym.data.repository.UsuarioRepository
 import com.example.appgym.ui.components.BottomBar
 import com.example.appgym.ui.components.AppNavigation
 import com.example.appgym.viewmodel.UsuarioViewModel
@@ -20,12 +19,11 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        val database = DatabaseProvider.getDatabase(this)
-        val repository = UsuarioRepository(database.usuarioDao())
-        val usuarioViewModel = UsuarioViewModel(repository)
-
         setContent {
             val navController = rememberNavController()
+
+            // Inicializamos el ViewModel de forma limpia y automática con Jetpack Compose
+            val usuarioViewModel: UsuarioViewModel = viewModel()
 
             // Obtenemos la ruta actual para la BottomBar
             val navBackStackEntry by navController.currentBackStackEntryAsState()

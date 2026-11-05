@@ -3,7 +3,7 @@ package com.example.appgym.data.entities
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 
-@Entity(tableName = "ejercicios")
+@Entity(tableName = "Ejercicio")
 data class Ejercicio(
 
     @PrimaryKey(autoGenerate = true)

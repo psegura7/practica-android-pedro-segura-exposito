@@ -13,19 +13,13 @@ import com.example.appgym.viewmodel.UsuarioViewModel
 fun UsuariosScreen(
     viewModel: UsuarioViewModel
 ) {
-
     val usuarios by viewModel.usuarios.collectAsState()
-
-    LaunchedEffect(Unit) {
-        viewModel.cargarUsuarios()
-    }
 
     Column(
         modifier = Modifier
             .fillMaxSize()
             .padding(16.dp)
     ) {
-
         Text(
             text = "Bienvenido a AppGym",
             style = MaterialTheme.typography.headlineMedium
@@ -41,39 +35,21 @@ fun UsuariosScreen(
         Spacer(modifier = Modifier.height(10.dp))
 
         LazyColumn {
-
             items(usuarios) { usuario ->
-
                 Card(
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(vertical = 6.dp)
                 ) {
-
                     Column(
                         modifier = Modifier.padding(16.dp)
                     ) {
-
-                        Text(
-                            text = "Usuario: ${usuario.nombreUsuario}"
-                        )
-
-                        Text(
-                            text = "Email: ${usuario.email}"
-                        )
-
-                        Text(
-                            text = "Edad: ${usuario.edad}"
-                        )
-
+                        Text(text = "Usuario: ${usuario.nombreUsuario}")
+                        Text(text = "Email: ${usuario.email}")
+                        Text(text = "Edad: ${usuario.edad}")
                     }
-
                 }
-
             }
-
         }
-
     }
-
 }

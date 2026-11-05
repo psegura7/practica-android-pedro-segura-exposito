@@ -1,38 +1,39 @@
 package com.example.appgym.viewmodel
 
-import androidx.lifecycle.ViewModel
+import android.app.Application
+import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.appgym.data.database.DatabaseProvider
 import com.example.appgym.data.entities.Usuario
 import com.example.appgym.data.repository.UsuarioRepository
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
-class UsuarioViewModel(
-    private val repository: UsuarioRepository
-) : ViewModel() {
+class UsuarioViewModel(application: Application) : AndroidViewModel(application) {
+
+    // Inicializamos la base de datos y el repositorio internamente
+    private val db = DatabaseProvider.getDatabase(application)
+    private val repository = UsuarioRepository(db.usuarioDao())
 
     // 1. Lista reactiva de todos los usuarios
     val usuarios: StateFlow<List<Usuario>> = repository.obtenerTodosLosUsuarios()
         .stateIn(
             scope = viewModelScope,
-            started = SharingStarted.WhileSubscribed(5000),
+            started = SharingStarted.WhileSubscribed(5000), // <-- Directamente SharingStarted
             initialValue = emptyList()
         )
-
     // 2. Estado del usuario logueado actualmente
     private val _usuarioLogueado = MutableStateFlow<Usuario?>(null)
-    val usuarioLogueado: StateFlow<Usuario?> = _usuarioLogueado
+    val usuarioLogueado: StateFlow<Usuario?> = _usuarioLogueado.asStateFlow()
 
-    fun cargarUsuarios() {
-        // Room maneja la reactividad automáticamente mediante el Flow
-    }
-
-    suspend fun registrarUsuario(usuario: Usuario) {
-        repository.insertarUsuario(usuario)
+    fun registrarUsuario(usuario: Usuario) {
+        viewModelScope.launch {
+            repository.insertarUsuario(usuario)
+        }
     }
 
     fun eliminar(usuario: Usuario) {

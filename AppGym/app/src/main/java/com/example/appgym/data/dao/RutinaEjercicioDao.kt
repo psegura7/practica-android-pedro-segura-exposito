@@ -7,7 +7,7 @@ import com.example.appgym.data.entities.RutinaEjercicio
 interface RutinaEjercicioDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertar(rutinaEjercicio: RutinaEjercicio)
+    suspend fun insertar(rutinaEjercicio: RutinaEjercicio): Long
 
     @Update
     suspend fun actualizar(rutinaEjercicio: RutinaEjercicio)
